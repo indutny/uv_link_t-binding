@@ -116,6 +116,7 @@ void Observer::OnRead(uv_link_observer_t* observer,
 
 
 void Observer::OnClose(uv_link_t* source) {
+  Nan::HandleScope scope;
   Observer* o = reinterpret_cast<Observer*>(source->data);
 
   Nan::MakeCallback(o->handle(), "onclose", 0, nullptr);
