@@ -15,14 +15,17 @@ const server = net.createServer((c) => {
     const o = new binding.Observer();
 
     binding.chain(source.link, o.link);
-    o.ondata = (nread, buf) => {
-      console.log(nread, buf);
-      if (nread !== -4095)
-        return;
-      server.close();
-      o.close();
-    };
+
     o.setStreaming(true);
-    o.readStart();
+    const phantom = new net.Socket({ handle: o });
+
+    phantom.on('data', (buf) => {
+      console.log(buf);
+    });
+
+    phantom.on('end', (buf) => {
+      console.log('end');
+      server.close();
+    });
   });
 });

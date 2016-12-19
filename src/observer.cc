@@ -111,7 +111,7 @@ void Observer::OnRead(uv_link_observer_t* observer,
     Nan::New(static_cast<int32_t>(nread)),
     buffer
   };
-  Nan::MakeCallback(o->handle(), "ondata", 2, argv);
+  Nan::MakeCallback(o->handle(), "onread", 2, argv);
 }
 
 
