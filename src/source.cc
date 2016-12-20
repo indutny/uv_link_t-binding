@@ -23,8 +23,8 @@ NAN_METHOD(LinkSource::New) {
   LinkSource* source = new LinkSource(
       reinterpret_cast<uv_stream_t*>(info[0].As<External>()->Value()));
 
-  source->Wrap(info.This());
-  info.GetReturnValue().Set(info.This());
+  source->Wrap(info.Holder());
+  info.GetReturnValue().Set(info.Holder());
 }
 
 

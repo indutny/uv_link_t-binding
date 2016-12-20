@@ -27,5 +27,9 @@ const server = net.createServer((c) => {
       console.log('end');
       server.close();
     });
+
+    phantom.on('close', () => {
+      console.log('close');
+    });
   });
 });

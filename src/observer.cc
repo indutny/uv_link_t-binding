@@ -31,13 +31,18 @@ void Observer::Init(Handle<Object> target) {
 
 NAN_METHOD(Observer::New) {
   Observer* o = new Observer();
-  o->Wrap(info.This());
-  info.GetReturnValue().Set(info.This());
+  o->Wrap(info.Holder());
+  info.GetReturnValue().Set(info.Holder());
 }
 
 
 NAN_METHOD(Observer::Close) {
   Observer* o = Nan::ObjectWrap::Unwrap<Observer>(info.Holder());
+
+  // TODO(indutny): cache `onclose`
+  if (info[0]->IsFunction())
+    Nan::Set(info.Holder(), Nan::New("onclose").ToLocalChecked(), info[0]);
+
   uv_link_close(o->link(), OnClose);
 }
 
@@ -103,7 +108,7 @@ void Observer::OnRead(uv_link_observer_t* observer,
 
   Local<Value> buffer;
   if (buf != nullptr && nread >= 0)
-    buffer = Nan::NewBuffer(buf->base, nread).ToLocalChecked();
+    buffer = Nan::CopyBuffer(buf->base, nread).ToLocalChecked();
   else
     buffer = Nan::Undefined();
 
